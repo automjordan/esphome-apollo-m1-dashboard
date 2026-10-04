@@ -1,0 +1,13 @@
+# segreti
+secrets.yaml
+*.secret.yaml
+
+# build ESPHome
+.esphome/
+*.bin
+*.elf
+*.factory.bin
+
+# sistema
+.DS_Store
+Thumbs.db

@@ -1,0 +1,209 @@
+[
+  {
+    "id": "m1flow",
+    "type": "tab",
+    "label": "M-1 Matrix",
+    "disabled": false,
+    "info": "Eventi puntuali -> display Apollo M-1.\n\nI dati continui (fotovoltaico, meteo, EV, PM2.5) NON passano da qui:\nli legge direttamente ESPHome dalle entita' di Home Assistant.\nQui arrivano solo le notifiche che devono interrompere la rotazione."
+  },
+  {
+    "id": "m1cmt",
+    "type": "comment",
+    "z": "m1flow",
+    "name": "Dopo l'import: apri ogni nodo e seleziona il server Home Assistant",
+    "info": "",
+    "x": 260,
+    "y": 40,
+    "wires": []
+  },
+  {
+    "id": "m1t1",
+    "type": "server-state-changed",
+    "z": "m1flow",
+    "name": "Lavatrice -> Fine",
+    "server": "",
+    "version": 4,
+    "outputs": 1,
+    "exposeToHomeAssistant": false,
+    "haConfig": [],
+    "entityidfilter": "sensor.washing_machine_status",
+    "entityidfiltertype": "exact",
+    "outputinitially": false,
+    "state_type": "str",
+    "haltifstate": "Fine",
+    "halt_if_type": "str",
+    "halt_if_compare": "is",
+    "output_only_on_state_change": true,
+    "for": "0",
+    "forType": "num",
+    "forUnits": "minutes",
+    "x": 170,
+    "y": 100,
+    "wires": [
+      [
+        "m1fn"
+      ]
+    ]
+  },
+  {
+    "id": "m1t2",
+    "type": "server-state-changed",
+    "z": "m1flow",
+    "name": "Campanello",
+    "server": "",
+    "version": 4,
+    "outputs": 1,
+    "exposeToHomeAssistant": false,
+    "haConfig": [],
+    "entityidfilter": "binary_sensor.campanello_visitatore",
+    "entityidfiltertype": "exact",
+    "outputinitially": false,
+    "state_type": "str",
+    "haltifstate": "on",
+    "halt_if_type": "str",
+    "halt_if_compare": "is",
+    "output_only_on_state_change": true,
+    "for": "0",
+    "forType": "num",
+    "forUnits": "minutes",
+    "x": 160,
+    "y": 155,
+    "wires": [
+      [
+        "m1fn"
+      ]
+    ]
+  },
+  {
+    "id": "m1t3",
+    "type": "server-state-changed",
+    "z": "m1flow",
+    "name": "Porta ingresso aperta 5 min",
+    "server": "",
+    "version": 4,
+    "outputs": 1,
+    "exposeToHomeAssistant": false,
+    "haConfig": [],
+    "entityidfilter": "binary_sensor.sensore_porta_1",
+    "entityidfiltertype": "exact",
+    "outputinitially": false,
+    "state_type": "str",
+    "haltifstate": "on",
+    "halt_if_type": "str",
+    "halt_if_compare": "is",
+    "output_only_on_state_change": true,
+    "for": "5",
+    "forType": "num",
+    "forUnits": "minutes",
+    "x": 190,
+    "y": 210,
+    "wires": [
+      [
+        "m1fn"
+      ]
+    ]
+  },
+  {
+    "id": "m1t4",
+    "type": "server-state-changed",
+    "z": "m1flow",
+    "name": "Porta retro aperta 5 min",
+    "server": "",
+    "version": 4,
+    "outputs": 1,
+    "exposeToHomeAssistant": false,
+    "haConfig": [],
+    "entityidfilter": "binary_sensor.sensore_porta_9",
+    "entityidfiltertype": "exact",
+    "outputinitially": false,
+    "state_type": "str",
+    "haltifstate": "on",
+    "halt_if_type": "str",
+    "halt_if_compare": "is",
+    "output_only_on_state_change": true,
+    "for": "5",
+    "forType": "num",
+    "forUnits": "minutes",
+    "x": 170,
+    "y": 265,
+    "wires": [
+      [
+        "m1fn"
+      ]
+    ]
+  },
+  {
+    "id": "m1t5",
+    "type": "server-state-changed",
+    "z": "m1flow",
+    "name": "Rasaerba (qualsiasi stato)",
+    "server": "",
+    "version": 4,
+    "outputs": 1,
+    "exposeToHomeAssistant": false,
+    "haConfig": [],
+    "entityidfilter": "lawn_mower.tagliaerba",
+    "entityidfiltertype": "exact",
+    "outputinitially": false,
+    "state_type": "str",
+    "haltifstate": "",
+    "halt_if_type": "str",
+    "halt_if_compare": "is",
+    "output_only_on_state_change": true,
+    "for": "0",
+    "forType": "num",
+    "forUnits": "minutes",
+    "x": 200,
+    "y": 320,
+    "wires": [
+      [
+        "m1fn"
+      ]
+    ]
+  },
+  {
+    "id": "m1fn",
+    "type": "function",
+    "z": "m1flow",
+    "name": "componi alert M-1",
+    "func": "// Mappa entita' -> alert. Ritorna null se lo stato non merita il display.\n// icon: washing | bell | door | power | mower | air | ev | alert\n// r,g,b: colore della riga principale   seconds: durata a schermo\n//\n// Per aggiungere un evento: duplica un nodo trigger, punta la tua entita',\n// e aggiungi qui sotto una riga con lo stesso entity_id.\n\nconst T = {\n\n  \"sensor.washing_machine_status\": s =>\n    s === \"Fine\"\n      ? { icon: \"washing\", line1: \"LAVATRICE\", line2: \"finita\",\n          r: 0, g: 200, b: 255, seconds: 25 }\n      : null,\n\n  \"binary_sensor.campanello_visitatore\": s =>\n    s === \"on\"\n      ? { icon: \"bell\", line1: \"CAMPANELLO\", line2: \"\",\n          r: 255, g: 190, b: 40, seconds: 20 }\n      : null,\n\n  \"binary_sensor.sensore_porta_1\": s =>\n    s === \"on\"\n      ? { icon: \"door\", line1: \"INGRESSO\", line2: \"aperta\",\n          r: 255, g: 120, b: 0, seconds: 30 }\n      : null,\n\n  \"binary_sensor.sensore_porta_9\": s =>\n    s === \"on\"\n      ? { icon: \"door\", line1: \"RETRO\", line2: \"aperta\",\n          r: 255, g: 120, b: 0, seconds: 30 }\n      : null,\n\n  \"lawn_mower.tagliaerba\": s =>\n    /error|fault|stuck|blocc|errore/i.test(s)\n      ? { icon: \"mower\", line1: \"RASAERBA\", line2: \"errore\",\n          r: 255, g: 50, b: 40, seconds: 45 }\n      : null\n};\n\nconst fn = T[msg.topic];\nif (!fn) { return null; }\n\nconst alert = fn(String(msg.payload));\nif (!alert) { return null; }\n\n// antirimbalzo: non ripetere lo stesso alert entro 60 s\nconst key = msg.topic + \"|\" + alert.line1 + alert.line2;\nconst last = flow.get(\"m1_last\") || {};\nconst now = Date.now();\nif (last[key] && now - last[key] < 60000) { return null; }\nlast[key] = now;\nflow.set(\"m1_last\", last);\n\nmsg.payload = {\n  domain: \"esphome\",\n  service: \"m1_matrix_show_alert\",\n  data: alert\n};\nreturn msg;\n",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 470,
+    "y": 200,
+    "wires": [
+      [
+        "m1cs"
+      ]
+    ]
+  },
+  {
+    "id": "m1cs",
+    "type": "api-call-service",
+    "z": "m1flow",
+    "name": "esphome.m1_matrix_show_alert",
+    "server": "",
+    "version": 5,
+    "debugenabled": false,
+    "domain": "",
+    "service": "",
+    "areaId": [],
+    "deviceId": [],
+    "entityId": [],
+    "data": "",
+    "dataType": "json",
+    "mergeContext": "",
+    "mustacheAltTags": false,
+    "outputProperties": [],
+    "queue": "none",
+    "x": 750,
+    "y": 200,
+    "wires": [
+      []
+    ]
+  }
+]

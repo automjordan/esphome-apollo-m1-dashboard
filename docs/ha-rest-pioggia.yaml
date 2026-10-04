@@ -1,0 +1,24 @@
+# Sensore nowcast pioggia per Home Assistant (configuration.yaml)
+# Richiede una API key gratuita di Tomorrow.io.
+# Restituisce i minuti al primo minuto con pioggia, oppure -1.
+
+rest:
+  - resource: "https://api.tomorrow.io/v4/weather/forecast?location=LAT,LON&timesteps=1m&units=metric&apikey=LA_TUA_CHIAVE"
+    scan_interval: 600
+    timeout: 30
+    headers:
+      Accept: application/json
+    sensor:
+      - name: "Minuti alla pioggia nowcast"
+        unique_id: minuti_alla_pioggia_rest
+        unit_of_measurement: "min"
+        value_template: >-
+          {% set ns = namespace(m = -1) %}
+          {% for f in value_json['timelines']['minutely'] %}
+            {% if ns.m < 0
+               and ((f['values']['rainIntensity'] | float(0)) > 0.05
+                    or (f['values']['precipitationProbability'] | float(0)) >= 60) %}
+              {% set ns.m = loop.index0 %}
+            {% endif %}
+          {% endfor %}
+          {{ ns.m }}
