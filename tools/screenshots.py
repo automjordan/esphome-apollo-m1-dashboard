@@ -201,8 +201,8 @@ def allarme():
     c = (255, 30, 20)
     p.filled_rectangle(0, 0, 64, 12, c)
     p.filled_rectangle(0, 52, 64, 12, c)
-    p.print(32, 20, f_md, WHITE, "ALLARME", "center")
-    p.print(32, 38, f_xs, c, "INTRUSIONE", "center")
+    p.print(32, 22, f_xs, WHITE, "ALLARME", "center")
+    p.print(32, 36, f_xs, c, "INTRUSIONE", "center")
     return p
 
 

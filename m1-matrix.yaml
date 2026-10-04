@@ -824,8 +824,9 @@ display:
           Color c = acceso ? Color(255,30,20) : Color(70,8,5);
           it.filled_rectangle(0, 0, 64, 12, c);
           it.filled_rectangle(0, 52, 64, 12, c);
-          it.print(32, 20, id(font_md), Color(255,255,255), TextAlign::TOP_CENTER, "ALLARME");
-          it.print(32, 38, id(font_xs), c, TextAlign::TOP_CENTER, "INTRUSIONE");
+          // "ALLARME" a corpo 16 misura 80px: non ci sta. A corpo 8 sono 40px.
+          it.print(32, 22, id(font_xs), Color(255,255,255), TextAlign::TOP_CENTER, "ALLARME");
+          it.print(32, 36, id(font_xs), c, TextAlign::TOP_CENTER, "INTRUSIONE");
 
       # ------------------------------------------------------------ ALERT --
       - id: page_alert
