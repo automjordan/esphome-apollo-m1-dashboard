@@ -1,6 +1,6 @@
 # Apollo M-1 · display informativo per Home Assistant
 
-Configurazione ESPHome che trasforma un **Apollo Automation M-1** (matrice LED HUB75 64×64 su ESP32-S3) in un pannello informativo per Home Assistant: orologio, meteo, flusso energetico di casa, ricarica dell'auto elettrica, pioggia, rasaerba, qualità dell'aria, stato dell'allarme e notifiche puntuali.
+[questa descrizione è stata scritta dall'AI]Configurazione ESPHome che trasforma un **Apollo Automation M-1** (matrice LED HUB75 64×64 su ESP32-S3) in un pannello informativo per Home Assistant: orologio, meteo, flusso energetico di casa, ricarica dell'auto elettrica, pioggia, rasaerba, qualità dell'aria, stato dell'allarme e notifiche puntuali.
 
 ![Panoramica delle pagine](docs/img/panoramica.png)
 
